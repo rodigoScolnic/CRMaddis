@@ -10,10 +10,10 @@ router.get('/', async (req, res, next) => {
       FROM tasks t LEFT JOIN clients c ON c.id=t.client_id
       WHERE ($1 = '' OR t.status=$1)
         AND ($2 = '' OR t.title ILIKE $3 OR COALESCE(c.name,'') ILIKE $3)
-        AND ($4 = '' OR t.client_id=$4)
+        AND ($4::bigint IS NULL OR t.client_id=$4::bigint)
       ORDER BY CASE WHEN t.status='completed' THEN 1 ELSE 0 END,
         t.due_date ASC NULLS LAST, t.created_at DESC
-    `, [status || '', q || '', `%${q || ''}%`, clientId || '']);
+    `, [status || '', q || '', `%${q || ''}%`, clientId || null]);
     res.json(rows);
   } catch (error) { next(error); }
 });
