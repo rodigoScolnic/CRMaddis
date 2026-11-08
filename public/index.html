@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f7fb">
+  <meta name="description" content="CRMaddis — clientes, tareas y entregas bajo control.">
+  <title>CRMaddis — Gestión simple</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <section id="authScreen" class="auth-screen hidden">
+    <div class="auth-card">
+      <div class="brand-mark">a<span>.</span></div>
+      <p class="eyebrow">TU ESPACIO DE TRABAJO</p>
+      <h1 id="authTitle">Bienvenido de nuevo</h1>
+      <p class="muted" id="authSubtitle">Ingresá para continuar con tus proyectos.</p>
+      <form id="authForm" class="form-stack">
+        <div id="nameField" class="hidden"><label for="authName">Nombre</label><input id="authName" autocomplete="name"></div>
+        <div><label for="authEmail">Email</label><input id="authEmail" type="email" required autocomplete="username"></div>
+        <div><label for="authPassword">Contraseña</label><input id="authPassword" type="password" required minlength="8" autocomplete="current-password"></div>
+        <div id="setupField" class="hidden"><label for="setupToken">Código de configuración</label><input id="setupToken" type="password"></div>
+        <button class="btn primary full" id="authSubmit">Ingresar <span>→</span></button>
+        <p id="authError" class="form-error"></p>
+      </form>
+    </div>
+  </section>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">a<span>.</span></span><span>addis<span class="brand-light">workspace</span></span></a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav class="main-nav">
+        <button class="nav-link active" data-view="dashboard"><span class="nav-icon">◫</span> Resumen</button>
+        <button class="nav-link" data-view="tasks"><span class="nav-icon">✓</span> Tareas <span class="nav-count" id="navTaskCount">0</span></button>
+        <button class="nav-link" data-view="clients"><span class="nav-icon">◎</span> Clientes</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card"><div class="help-dot"></div><strong>Todo bajo control</strong><p>Organizá tus entregas y mantené el ritmo.</p></div>
+        <div class="user-row"><div class="avatar" id="userAvatar">R</div><div class="user-meta"><strong id="userName">Usuario</strong><span>Administrador</span></div><button id="logoutBtn" class="icon-btn" title="Cerrar sesión">↗</button></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu icon-btn" id="mobileMenu" aria-label="Abrir menú">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumbCurrent">Resumen</strong></div>
+        <div class="top-actions"><span class="today-label" id="todayLabel"></span><button class="btn primary top-add" id="quickAddBtn">＋ <span>Nuevo registro</span></button></div>
+      </header>
+
+      <section class="view active" id="view-dashboard">
+        <div class="page-heading"><div><p class="eyebrow">PANEL GENERAL</p><h1>Buen día, <span id="welcomeName">Rodry</span> <span class="wave">✳</span></h1><p class="muted">Este es el estado actual de tu trabajo.</p></div><button class="btn secondary" id="dashboardTaskBtn">＋ Nueva tarea</button></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Tareas pendientes</span><span class="stat-icon violet">◷</span></div><strong id="statOpen">0</strong><small>Por completar</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Entregas próximas</span><span class="stat-icon amber">⌁</span></div><strong id="statSoon">0</strong><small>En los próximos 7 días</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Vencidas</span><span class="stat-icon rose">!</span></div><strong id="statOverdue">0</strong><small>Necesitan atención</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Clientes activos</span><span class="stat-icon green">◎</span></div><strong id="statClients">0</strong><small id="statClientSub">En tu cartera</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <section class="panel upcoming-panel"><div class="panel-heading"><div><h2>Próximas entregas</h2><p>Lo que necesita tu atención</p></div><button class="text-btn" data-go="tasks">Ver todas →</button></div><div id="upcomingList" class="task-list"></div></section>
+          <section class="panel activity-panel"><div class="panel-heading"><div><h2>Actividad reciente</h2><p>Últimos movimientos</p></div></div><div id="recentList" class="activity-list"></div></section>
+        </div>
+      </section>
+
+      <section class="view" id="view-tasks">
+        <div class="page-heading"><div><p class="eyebrow">ORGANIZACIÓN</p><h1>Tareas</h1><p class="muted">Priorizá, avanzá y cumplí cada entrega.</p></div><button class="btn primary" id="newTaskBtn">＋ Nueva tarea</button></div>
+        <div class="toolbar"><div class="search-box"><span>⌕</span><input id="taskSearch" placeholder="Buscar tareas o clientes..."></div><select id="taskStatusFilter" class="filter-select"><option value="">Todos los estados</option><option value="pending">Pendientes</option><option value="in_progress">En progreso</option><option value="completed">Completadas</option></select></div>
+        <div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>TAREA</th><th>CLIENTE</th><th>FECHA DE ENTREGA</th><th>PRIORIDAD</th><th>ESTADO</th><th></th></tr></thead><tbody id="tasksTable"></tbody></table></div><div id="tasksEmpty" class="empty-state hidden"><span>✳</span><strong>No hay tareas por acá</strong><p>Creá una tarea para empezar a organizarte.</p></div></div>
+      </section>
+
+      <section class="view" id="view-clients">
+        <div class="page-heading"><div><p class="eyebrow">RELACIONES</p><h1>Clientes</h1><p class="muted">Toda la información de tus clientes, en un solo lugar.</p></div><button class="btn primary" id="newClientBtn">＋ Nuevo cliente</button></div>
+        <div class="toolbar"><div class="search-box"><span>⌕</span><input id="clientSearch" placeholder="Buscar por nombre, empresa o email..."></div><span class="results-label" id="clientResults"></span></div>
+        <div id="clientsGrid" class="clients-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><p class="eyebrow" id="modalEyebrow">NUEVO REGISTRO</p><h2 id="modalTitle">Crear tarea</h2></div><button class="icon-btn" id="modalClose" aria-label="Cerrar">×</button></div><form id="recordForm"><div id="modalFields" class="modal-fields"></div><p id="modalError" class="form-error"></p><div class="modal-actions"><button type="button" class="btn secondary" id="modalCancel">Cancelar</button><button type="submit" class="btn primary" id="modalSave">Guardar</button></div></form></section></div>
+  <div id="toast" class="toast"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
